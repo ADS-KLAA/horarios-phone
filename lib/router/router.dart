@@ -10,8 +10,8 @@ final GlobalKey<NavigatorState> _loginNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'login');
 final GlobalKey<NavigatorState> _signupNavigatorKey =
 GlobalKey<NavigatorState>(debugLabel: 'signup');
-// final GlobalKey<NavigatorState> _homeNavigatorKey =
-// GlobalKey<NavigatorState>(debugLabel: 'home');
+final GlobalKey<NavigatorState> _calendarNavigatorKey =
+GlobalKey<NavigatorState>(debugLabel: 'calendar');
 // final GlobalKey<NavigatorState> _userAnimeListScreen =
 // GlobalKey<NavigatorState>(debugLabel: 'userAnimeList');
 // final GlobalKey<NavigatorState> _userMangaListScreen =
@@ -52,6 +52,16 @@ final GoRouter router = GoRouter(
               path: '/signup',
               builder: (BuildContext context, GoRouterState state) =>
                   const SignupScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          navigatorKey: _calendarNavigatorKey,
+          routes: <RouteBase>[
+            GoRoute(
+              path: '/home',
+              builder: (BuildContext context, GoRouterState state) =>
+              const CalendarScreen(),
             ),
           ],
         ),

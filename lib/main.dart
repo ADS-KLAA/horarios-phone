@@ -17,7 +17,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(),
+      theme: ThemeData(colorSchemeSeed: const Color.fromARGB(255, 29, 78, 216)),
       title: 'Horários',
       routerConfig: router,
     );
