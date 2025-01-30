@@ -1,3 +1,4 @@
+import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -22,6 +23,11 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> {
     super.initState();
     publicNavigationShell = widget.navigationShell;
     goTo = (index) {
+      if (index >= 2) {
+        showBottomNavigationBar = true;
+      } else {
+        showBottomNavigationBar = false;
+      }
       publicNavigationShell.goBranch(index);
     };
   }
@@ -46,23 +52,33 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> {
       bottomNavigationBar: !showBottomNavigationBar
           ? const SizedBox.shrink()
           : BottomNavigationBar(
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.qr_code),
-                  label: 'Scan',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.school),
-                  label: 'School',
-                ),
-              ],
-              currentIndex: widget.navigationShell.currentIndex,
-              onTap: (index) => goTo(index),
-            ),
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.qr_code),
+            label: 'Scan',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            label: 'School',
+          ),
+        ],
+        currentIndex: widget.navigationShell.currentIndex == 2 ? 1 : widget
+            .navigationShell.currentIndex == 3 ? 0 : 2,
+        onTap: (index) =>
+        {
+          if (index == 0)
+            {goTo(3)}
+          else
+            if (index == 1)
+              {goTo(2)}
+            else
+              {goTo(4)}
+        },
+      ),
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: [

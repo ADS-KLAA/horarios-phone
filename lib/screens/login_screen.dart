@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:horarios_phone/api/api.dart';
 import 'package:horarios_phone/router/router.dart';
 import 'package:horarios_phone/screens/scaffold_screen.dart';
 import 'package:horarios_phone/screens/signup_screen.dart';
@@ -17,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   final FocusNode _focusNodePassword = FocusNode();
-  final TextEditingController _controllerUsername = TextEditingController();
+  final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
   bool _obscurePassword = true;
@@ -44,11 +45,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 60),
               TextFormField(
-                controller: _controllerUsername,
+                controller: _controllerEmail,
                 keyboardType: TextInputType.name,
                 decoration: InputDecoration(
-                  labelText: "Username",
-                  prefixIcon: const Icon(Icons.person_outline),
+                  labelText: "Email",
+                  prefixIcon: const Icon(Icons.email_outlined),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -59,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 onEditingComplete: () => _focusNodePassword.requestFocus(),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
-                    return "Please enter username.";
+                    return "Please enter email.";
                   }
                   return null;
                 },
@@ -106,9 +107,38 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    onPressed: () {
-                      // TODO add login validation and go to home screen
-                      // goTo(1);
+                    onPressed: () async {
+                      Map<String, dynamic> loginResponse = await Api()
+                          .loginAluno(
+                              _controllerEmail.text, _controllerPassword.text);
+                      if (!loginResponse.containsKey("Error")) {
+                        goTo(2);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            width: 200,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                            content: const Text("Login Successfully"),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            width: 200,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                            content: const Text("Login Failed"),
+                          ),
+                        );
+                      }
                     },
                     child: const Text("Login"),
                   ),
@@ -118,8 +148,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       const Text("Don't have an account?"),
                       TextButton(
                         onPressed: () {
-                          _formKey.currentState?.reset();
-                          // TODO go to Signup screen
                           goTo(1);
                         },
                         child: const Text("Signup"),
@@ -138,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void dispose() {
     _focusNodePassword.dispose();
-    _controllerUsername.dispose();
+    _controllerEmail.dispose();
     _controllerPassword.dispose();
     super.dispose();
   }

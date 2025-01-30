@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:horarios_phone/api/api.dart';
 
 import 'screens.dart';
 
@@ -18,6 +19,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _controllerUsername = TextEditingController();
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+  final TextEditingController _controllerClass = TextEditingController();
   final TextEditingController _controllerConFirmPassword =
       TextEditingController();
 
@@ -90,6 +92,28 @@ class _SignupScreenState extends State<SignupScreen> {
                   return null;
                 },
                 onEditingComplete: () => _focusNodePassword.requestFocus(),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: _controllerClass,
+                keyboardType: TextInputType.name,
+                decoration: InputDecoration(
+                  labelText: "Class",
+                  prefixIcon: const Icon(Icons.class_outlined),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter your class.";
+                  }
+                  return null;
+                },
+                onEditingComplete: () => _focusNodeEmail.requestFocus(),
               ),
               const SizedBox(height: 10),
               TextFormField(
@@ -171,9 +195,15 @@ class _SignupScreenState extends State<SignupScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    onPressed: () {
-                      // TODO change message according to response and router accordingly
-                      if (_formKey.currentState?.validate() ?? false) {
+                    onPressed: () async {
+                      Map<String, dynamic> registerResponse = await Api()
+                          .registerAluno(
+                              _controllerUsername.text,
+                              _controllerEmail.text,
+                              _controllerPassword.text,
+                              _controllerClass.text);
+                      if ((_formKey.currentState?.validate() ?? false) &&
+                          !registerResponse.containsKey("Error")) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             width: 200,
@@ -218,6 +248,7 @@ class _SignupScreenState extends State<SignupScreen> {
     _focusNodeConfirmPassword.dispose();
     _controllerUsername.dispose();
     _controllerEmail.dispose();
+    _controllerClass.dispose();
     _controllerPassword.dispose();
     _controllerConFirmPassword.dispose();
     super.dispose();
